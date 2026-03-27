@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이음(IEUM) - 지역 축제 통합 정보 플랫폼</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0a0a1a;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .6s ease, transform .6s ease;
+      transform: translateX(60px)
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0)
+    }
+
+    .slide.prev {
+      transform: translateX(-60px)
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+      background: rgba(255, 255, 255, .08);
+      backdrop-filter: blur(20px);
+      padding: 12px 24px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, .1)
+    }
+
+    .nav button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, .15);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: .3s
+    }
+
+    .nav button:hover {
+      background: rgba(255, 255, 255, .3)
+    }
+
+    .nav span {
+      line-height: 36px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, .6);
+      min-width: 60px;
+      text-align: center
+    }
+
+    .dots {
+      position: fixed;
+      bottom: 85px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 100
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .2);
+      transition: .3s;
+      cursor: pointer
+    }
+
+    .dot.active {
+      background: #7c5cfc;
+      width: 24px;
+      border-radius: 4px
+    }
+
+    /* Slide Backgrounds */
+    .bg-gradient-1 {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e)
+    }
+
+    .bg-gradient-2 {
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)
+    }
+
+    .bg-gradient-3 {
+      background: linear-gradient(135deg, #0d1117, #161b22, #21262d)
+    }
+
+    .bg-gradient-4 {
+      background: linear-gradient(135deg, #1a0533, #2d1b69, #1a1a2e)
+    }
+
+    .bg-gradient-5 {
+      background: linear-gradient(135deg, #0a192f, #112240, #1d3557)
+    }
+
+    .bg-gradient-6 {
+      background: linear-gradient(135deg, #1b1b2f, #162447, #1f4068)
+    }
+
+    .bg-gradient-7 {
+      background: linear-gradient(135deg, #0c0c1d, #1a1a3e, #2a1a5e)
+    }
+
+    /* Common */
+    .tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 16px
+    }
+
+    .tag-purple {
+      background: rgba(124, 92, 252, .2);
+      color: #a78bfa;
+      border: 1px solid rgba(124, 92, 252, .3)
+    }
+
+    .tag-blue {
+      background: rgba(59, 130, 246, .2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, .3)
+    }
+
+    .tag-green {
+      background: rgba(16, 185, 129, .2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, .3)
+    }
+
+    .tag-orange {
+      background: rgba(249, 115, 22, .2);
+      color: #fdba74;
+      border: 1px solid rgba(249, 115, 22, .3)
+    }
+
+    h1 {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 20px
+    }
+
+    h2 {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 16px
+    }
+
+    h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: rgba(255, 255, 255, .6);
+      line-height: 1.6;
+      max-width: 700px
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #7c5cfc, #00d2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .gradient-text-warm {
+      background: linear-gradient(135deg, #f97316, #ef4444, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .gradient-text-green {
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+      max-width: 1100px
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px;
+      width: 100%;
+      max-width: 1100px
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      transition: transform .3s, border-color .3s
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124, 92, 252, .3)
+    }
+
+    .card-icon {
+      font-size: 36px;
+      margin-bottom: 12px
+    }
+
+    .card h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px
+    }
+
+    .card p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, .5);
+      line-height: 1.6
+    }
+
+    .full-w {
+      width: 100%;
+      max-width: 1100px
+    }
+
+    .text-center {
+      text-align: center
+    }
+
+    .mb-8 {
+      margin-bottom: 8px
+    }
+
+    .mb-16 {
+      margin-bottom: 16px
+    }
+
+    .mb-24 {
+      margin-bottom: 24px
+    }
+
+    .mb-32 {
+      margin-bottom: 32px
+    }
+
+    .mb-40 {
+      margin-bottom: 40px
+    }
+
+    /* Table */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px
+    }
+
+    .tbl th {
+      background: rgba(124, 92, 252, .15);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(124, 92, 252, .3)
+    }
+
+    .tbl td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .7)
+    }
+
+    .tbl tr:hover td {
+      background: rgba(255, 255, 255, .03)
+    }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      max-width: 1050px
+    }
+
+    .tl-item {
+      flex: 1;
+      position: relative;
+      padding: 20px 16px;
+      text-align: center
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-radius: 2px
+    }
+
+    .tl-item:nth-child(1)::before {
+      background: linear-gradient(90deg, #7c5cfc, #a78bfa)
+    }
+
+    .tl-item:nth-child(2)::before {
+      background: linear-gradient(90deg, #3b82f6, #60a5fa)
+    }
+
+    .tl-item:nth-child(3)::before {
+      background: linear-gradient(90deg, #10b981, #34d399)
+    }
+
+    .tl-item:nth-child(4)::before {
+      background: linear-gradient(90deg, #f97316, #fb923c)
+    }
+
+    .tl-week {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .4);
+      margin-bottom: 6px
+    }
+
+    .tl-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px
+    }
+
+    .tl-desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .5);
+      line-height: 1.5
+    }
+
+    /* Tech Badge */
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .1);
+      font-size: 14px;
+      font-weight: 500;
+      margin: 4px
+    }
+
+    /* Decorative */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .15;
+      pointer-events: none
+    }
+
+    .glow-purple {
+      background: #7c5cfc
+    }
+
+    .glow-blue {
+      background: #3b82f6
+    }
+
+    .glow-pink {
+      background: #ec4899
+    }
+
+    /* Slide-specific */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      background: rgba(124, 92, 252, .1);
+      border: 1px solid rgba(124, 92, 252, .3);
+      font-size: 15px;
+      color: #a78bfa;
+      margin-bottom: 24px
+    }
+
+    .team-info {
+      font-size: 16px;
+      color: rgba(255, 255, 255, .4);
+      margin-top: 24px;
+      line-height: 1.8
+    }
+
+    .number-highlight {
+      font-size: 56px;
+      font-weight: 900;
+      margin-bottom: 4px
+    }
+
+    /* Keyframes */
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-10px)
+      }
+    }
+
+    .float {
+      animation: float 3s ease-in-out infinite
+    }
+
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        opacity: .1
+      }
+
+      50% {
+        opacity: .25
+      }
+    }
+
+    .pulse {
+      animation: pulse-glow 4s ease-in-out infinite
+    }
+
+    .slide-header {
+      width: 100%;
+      max-width: 1100px;
+      margin-bottom: 32px
+    }
+
+    .divider {
+      width: 60px;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #7c5cfc, #00d2ff);
+      margin-bottom: 16px
+    }
+
+    /* Feature list */
+    .feat-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .feat-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 15px;
+      color: rgba(255, 255, 255, .7);
+      line-height: 1.5
+    }
+
+    .feat-list li::before {
+      content: '▸';
+      color: #7c5cfc;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    /* Priority */
+    .priority {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .p1 {
+      background: rgba(239, 68, 68, .2);
+      color: #fca5a5
+    }
+
+    .p2 {
+      background: rgba(59, 130, 246, .2);
+      color: #93c5fd
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide bg-gradient-1 active" id="s1">
+    <div class="glow glow-purple pulse" style="width:400px;height:400px;top:-100px;right:-100px"></div>
+    <div class="glow glow-blue pulse" style="width:300px;height:300px;bottom:-50px;left:-50px"></div>
+    <div class="text-center">
+      <div class="hero-badge">📋 1차 프로젝트 기획 발표</div>
+      <h1 style="font-size:60px">
+        <span class="gradient-text">이음</span><span
+          style="font-size:28px;color:rgba(255,255,255,.4);margin-left:8px">IEUM</span>
+      </h1>
+      <h2 style="font-size:32px;font-weight:500;color:rgba(255,255,255,.7);margin-bottom:32px">
+        🎪 지역 축제 통합 정보 플랫폼
+      </h2>
+      <p class="subtitle text-center" style="margin:0 auto 32px">
+        전국 축제를 지도 위에서 발견하고, 후기로 나누는<br>원스톱 축제 정보 서비스
+      </p>
+      <div class="team-info">
+        👥 박수경 · 채나은 · 정혜연 · 황서범 · 정우혁<br>
+        📅 2026.03.25 ~ 2026.04.20 (4주)
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Problem & Background -->
+  <div class="slide bg-gradient-2" id="s2">
+    <div class="glow glow-pink pulse" style="width:350px;height:350px;top:-80px;left:-80px"></div>
+    <div class="slide-header">
+      <span class="tag tag-orange">PROBLEM</span>
+      <h2>왜 이 프로젝트를 하는가?</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h4>정보의 파편화</h4>
+        <p>축제 정보가 지자체 홈페이지, 블로그, SNS 등에 흩어져 있어 한눈에 파악하기 어려움</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗺️</div>
+        <h4>통합 플랫폼 부재</h4>
+        <p>축제 일정·위치·후기를 하나의 플랫폼에서 통합 조회할 수 있는 서비스가 없음</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💬</div>
+        <h4>사용자 참여 콘텐츠 수요</h4>
+        <p>후기·사진 공유 및 커뮤니티 소통 등 사용자 참여형 콘텐츠에 대한 수요가 존재</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h4>공공데이터 활용 가능</h4>
+        <p>공공데이터포털(data.go.kr)의 축제/행사 API를 활용하여 실제 데이터 기반 서비스 구현 가능</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Solution & Goals -->
+  <div class="slide bg-gradient-4" id="s3">
+    <div class="glow glow-purple pulse" style="width:400px;height:400px;bottom:-100px;right:-100px"></div>
+    <div class="slide-header text-center">
+      <span class="tag tag-green">SOLUTION</span>
+      <h2>프로젝트 목표</h2>
+      <div class="divider" style="margin:0 auto 16px"></div>
+    </div>
+    <div class="grid-3 mb-32">
+      <div class="card text-center" style="border-top:3px solid #7c5cfc">
+        <div class="card-icon">🗺️</div>
+        <h4>지도 기반 통합 탐색</h4>
+        <p>카카오맵 API 연동, 시/도별 클러스터링, GPS 기반 주변 축제 탐색</p>
+      </div>
+      <div class="card text-center" style="border-top:3px solid #3b82f6">
+        <div class="card-icon">🔐</div>
+        <h4>다중 권한 시스템</h4>
+        <p>비회원(조회) + 회원(참여) + 관리자(운영) 3종 역할 기반 기능 제공</p>
+      </div>
+      <div class="card text-center" style="border-top:3px solid #10b981">
+        <div class="card-icon">⭐</div>
+        <h4>커뮤니티 생태계</h4>
+        <p>지난 축제 후기·별점·베스트 포토 등 사용자 참여 콘텐츠 생태계 조성</p>
+      </div>
+    </div>
+    <div class="full-w text-center">
+      <p style="font-size:22px;color:rgba(255,255,255,.5)">
+        <em>"전국 축제를 지도 위에서 발견하고, 후기로 나누는 통합 축제 정보 플랫폼"</em>
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Target Users -->
+  <div class="slide bg-gradient-3" id="s4">
+    <div class="slide-header">
+      <span class="tag tag-blue">USERS</span>
+      <h2>타겟 사용자</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="border-left:3px solid #a78bfa">
+        <div style="font-size:48px;margin-bottom:16px">👀</div>
+        <h3 style="font-size:22px">비회원</h3>
+        <p class="mb-16">로그인 없이 서비스를 이용하는 방문자</p>
+        <ul class="feat-list">
+          <li>축제 정보 조회</li>
+          <li>지도 탐색</li>
+          <li>검색 / 필터링</li>
+          <li>조회만 가능</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:3px solid #3b82f6">
+        <div style="font-size:48px;margin-bottom:16px">🧑</div>
+        <h3 style="font-size:22px">회원 (방문객)</h3>
+        <p class="mb-16">회원가입한 일반 사용자</p>
+        <ul class="feat-list">
+          <li>축제 정보 검색 · 탐색</li>
+          <li>후기 작성 · 별점</li>
+          <li>즐겨찾기</li>
+          <li>커뮤니티 참여</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:3px solid #10b981">
+        <div style="font-size:48px;margin-bottom:16px">⚙️</div>
+        <h3 style="font-size:22px">관리자</h3>
+        <p class="mb-16">플랫폼 운영 관리자</p>
+        <ul class="feat-list">
+          <li>축제 데이터 관리</li>
+          <li>공공 API 갱신</li>
+          <li>신고 처리</li>
+          <li>통계 확인</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Key Features -->
+  <div class="slide bg-gradient-5" id="s5">
+    <div class="glow glow-blue pulse" style="width:350px;height:350px;top:-80px;right:-80px"></div>
+    <div class="slide-header">
+      <span class="tag tag-purple">FEATURES</span>
+      <h2>주요 기능 (MVP)</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid-2" style="gap:16px">
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">🗺️</span>
+          <h4 style="margin:0">전국 축제 지도 탐색</h4><span class="priority p1">P1</span>
+        </div>
+        <p>카카오맵 API, 클러스터링 마커, GPS 기반 탐색</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">📋</span>
+          <h4 style="margin:0">축제 목록 & 상세</h4><span class="priority p1">P1</span>
+        </div>
+        <p>일정/장소/소개/이미지 표시, 비회원 조회 가능</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">🔍</span>
+          <h4 style="margin:0">검색 & 필터링</h4><span class="priority p1">P1</span>
+        </div>
+        <p>지역별, 날짜별, 카테고리별 필터 + 키워드 검색</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">🔐</span>
+          <h4 style="margin:0">회원가입/로그인 (JWT)</h4><span class="priority p1">P1</span>
+        </div>
+        <p>다중 권한, JWT 인증, BFF iron-session</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">📅</span>
+          <h4 style="margin:0">달력 뷰</h4><span class="priority p1">P1</span>
+        </div>
+        <p>캘린더 형태 일정 조회, 리스트/카드 전환</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">📝</span>
+          <h4 style="margin:0">지난 축제 & 리뷰</h4><span class="priority p1">P1</span>
+        </div>
+        <p>종료 축제 아카이브, 후기/별점 시스템</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">💬</span>
+          <h4 style="margin:0">커뮤니티</h4><span class="priority p2">P2</span>
+        </div>
+        <p>Q&A, 축제 꿀팁, 먹거리 정보 게시판</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:24px">📊</span>
+          <h4 style="margin:0">관리자 통계 대시보드</h4><span class="priority p1">P1</span>
+        </div>
+        <p>지역별 축제 분포, 사용자 활동 시각화</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Differentiation -->
+  <div class="slide bg-gradient-6" id="s6">
+    <div class="slide-header text-center">
+      <span class="tag tag-green">DIFFERENTIATION</span>
+      <h2>차별화 포인트</h2>
+      <div class="divider" style="margin:0 auto 16px"></div>
+    </div>
+    <div class="grid-4" style="margin-bottom:32px">
+      <div class="card text-center" style="padding:24px">
+        <div class="number-highlight gradient-text">01</div>
+        <h4>지도 기반 통합 탐색</h4>
+        <p>지역별 클러스터링 + GPS 연동으로 내 주변 축제를 직관적으로 탐색</p>
+      </div>
+      <div class="card text-center" style="padding:24px">
+        <div class="number-highlight gradient-text">02</div>
+        <h4>다중 사용자 권한</h4>
+        <p>비회원/회원/관리자 3종 역할 구분, 각각에 맞는 기능 제공</p>
+      </div>
+      <div class="card text-center" style="padding:24px">
+        <div class="number-highlight gradient-text">03</div>
+        <h4>축제 라이프사이클</h4>
+        <p>진행 중 축제와 지난 축제를 구분하여 정보+후기 체계적 관리</p>
+      </div>
+      <div class="card text-center" style="padding:24px">
+        <div class="number-highlight gradient-text">04</div>
+        <h4>커뮤니티 기반</h4>
+        <p>Q&A, 꿀팁, 먹거리 정보 등 사용자 참여형 콘텐츠 생태계</p>
+      </div>
+    </div>
+    <div class="full-w">
+      <table class="tbl">
+        <tr>
+          <th>벤치마킹</th>
+          <th>참고할 점</th>
+          <th>우리의 개선</th>
+        </tr>
+        <tr>
+          <td>대한민국 구석구석</td>
+          <td>축제/행사 정보 제공 구조</td>
+          <td>지도 기반 탐색 + 커뮤니티 추가</td>
+        </tr>
+        <tr>
+          <td>카카오맵 축제 검색</td>
+          <td>지도 UI, 클러스터링 패턴</td>
+          <td>축제 전용 필터 + 커뮤니티</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Tech Stack -->
+  <div class="slide bg-gradient-7" id="s7">
+    <div class="glow glow-purple pulse" style="width:400px;height:400px;bottom:-150px;left:-100px"></div>
+    <div class="slide-header">
+      <span class="tag tag-purple">TECH STACK</span>
+      <h2>기술 스택</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="border-top:3px solid #10b981">
+        <h4 style="margin-bottom:16px"><span class="gradient-text-green">Frontend</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="tech-badge">⚡ Next.js 16</span>
+          <span class="tech-badge">⚛️ React 19</span>
+          <span class="tech-badge">🔷 TypeScript</span>
+          <span class="tech-badge">🎨 CSS Modules</span>
+          <span class="tech-badge">🐻 Zustand</span>
+          <span class="tech-badge">🗺️ Kakao Maps</span>
+          <span class="tech-badge">📅 FullCalendar</span>
+          <span class="tech-badge">🔒 iron-session</span>
+        </div>
+      </div>
+      <div class="card" style="border-top:3px solid #7c5cfc">
+        <h4 style="margin-bottom:16px"><span class="gradient-text">Backend</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="tech-badge">☕ Java 21</span>
+          <span class="tech-badge">🍃 Spring Boot 4.0</span>
+          <span class="tech-badge">🔐 Spring Security</span>
+          <span class="tech-badge">🎫 JWT</span>
+          <span class="tech-badge">🐘 PostgreSQL</span>
+          <span class="tech-badge">📖 Swagger</span>
+          <span class="tech-badge">🌐 공공데이터 API</span>
+        </div>
+      </div>
+      <div class="card" style="border-top:3px solid #f97316">
+        <h4 style="margin-bottom:16px"><span class="gradient-text-warm">Infra / DevOps</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="tech-badge">🐳 Docker Compose</span>
+          <span class="tech-badge">🔷 Nginx</span>
+          <span class="tech-badge">🔄 GitHub Actions</span>
+          <span class="tech-badge">📦 Docker Volume</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Architecture -->
+  <div class="slide bg-gradient-3" id="s8">
+    <div class="slide-header">
+      <span class="tag tag-blue">ARCHITECTURE</span>
+      <h2>시스템 아키텍처</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="full-w">
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;position:relative">
+        <!-- Client -->
+        <div
+          style="background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.3);border-radius:16px;padding:20px 24px;text-align:center;min-width:130px">
+          <div style="font-size:28px;margin-bottom:6px">🖥️</div>
+          <div style="font-size:14px;font-weight:700">Client</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5)">Browser<br>SSR + CSR</div>
+        </div>
+        <div style="color:rgba(255,255,255,.3);font-size:24px;padding:0 12px">→</div>
+        <!-- Frontend -->
+        <div
+          style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:16px;padding:20px 24px;text-align:center;min-width:170px">
+          <div style="font-size:28px;margin-bottom:6px">🟢</div>
+          <div style="font-size:14px;font-weight:700">Next.js (BFF)</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5)">App Router<br>API Routes<br>iron-session</div>
+        </div>
+        <div style="color:rgba(255,255,255,.3);font-size:24px;padding:0 12px">→</div>
+        <!-- Backend -->
+        <div
+          style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:16px;padding:20px 24px;text-align:center;min-width:170px">
+          <div style="font-size:28px;margin-bottom:6px">🔵</div>
+          <div style="font-size:14px;font-weight:700">Spring Boot</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5)">Hexagonal Arch<br>REST API<br>JWT Filter</div>
+        </div>
+        <div style="color:rgba(255,255,255,.3);font-size:24px;padding:0 12px">→</div>
+        <!-- Database -->
+        <div
+          style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);border-radius:16px;padding:20px 24px;text-align:center;min-width:130px">
+          <div style="font-size:28px;margin-bottom:6px">🟠</div>
+          <div style="font-size:14px;font-weight:700">PostgreSQL</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5)">+ PostGIS<br>Docker Volume</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:24px;margin-top:24px">
+        <div
+          style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 20px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">🌐</div>
+          <div style="font-size:12px;font-weight:600">카카오맵 SDK</div>
+        </div>
+        <div
+          style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 20px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">📡</div>
+          <div style="font-size:12px;font-weight:600">공공데이터 API</div>
+        </div>
+        <div
+          style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 20px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">🐳</div>
+          <div style="font-size:12px;font-weight:600">Docker Compose</div>
+        </div>
+        <div
+          style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 20px;text-align:center">
+          <div style="font-size:20px;margin-bottom:4px">🔄</div>
+          <div style="font-size:12px;font-weight:600">GitHub Actions</div>
+        </div>
+      </div>
+      <!-- ADR summary -->
+      <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <div class="tech-badge" style="font-size:12px">Hexagonal Arch — 도메인 중심, 교체 용이</div>
+        <div class="tech-badge" style="font-size:12px">BFF 패턴 — JWT 미노출, XSS 방지</div>
+        <div class="tech-badge" style="font-size:12px">하이브리드 렌더링 — SEO(SSR) + 인터랙티브(CSR)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: ERD -->
+  <div class="slide bg-gradient-2" id="s9">
+    <div class="slide-header">
+      <span class="tag tag-orange">DATABASE</span>
+      <h2>데이터 설계 (ERD)</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="full-w">
+      <div class="grid-4" style="margin-bottom:24px">
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">👤</div>
+          <h4 style="font-size:14px">User</h4>
+          <p style="font-size:11px">email, role, profile</p>
+        </div>
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">🎪</div>
+          <h4 style="font-size:14px">Festival</h4>
+          <p style="font-size:11px">title, dates, lat/lng, status</p>
+        </div>
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">⭐</div>
+          <h4 style="font-size:14px">Review</h4>
+          <p style="font-size:11px">rating(1~5), content</p>
+        </div>
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">❤️</div>
+          <h4 style="font-size:14px">Favorite</h4>
+          <p style="font-size:11px">user ↔ festival</p>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-bottom:24px">
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">📝</div>
+          <h4 style="font-size:14px">Post</h4>
+          <p style="font-size:11px">QNA/TIP/FOOD</p>
+        </div>
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">💭</div>
+          <h4 style="font-size:14px">Comment</h4>
+          <p style="font-size:11px">post ← comments</p>
+        </div>
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">📢</div>
+          <h4 style="font-size:14px">Notice</h4>
+          <p style="font-size:11px">admin writes</p>
+        </div>
+        <div class="card text-center" style="padding:16px">
+          <div style="font-size:24px">🚨</div>
+          <h4 style="font-size:14px">Report</h4>
+          <p style="font-size:11px">POST/REVIEW/COMMENT</p>
+        </div>
+      </div>
+      <table class="tbl">
+        <tr>
+          <th>관계</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>User 1:N Review</td>
+          <td>한 사용자가 여러 후기 작성</td>
+        </tr>
+        <tr>
+          <td>User 1:N Favorite</td>
+          <td>한 사용자가 여러 축제 즐겨찾기</td>
+        </tr>
+        <tr>
+          <td>Festival 1:N Review</td>
+          <td>한 축제에 여러 후기</td>
+        </tr>
+        <tr>
+          <td>Post 1:N Comment</td>
+          <td>한 게시글에 여러 댓글</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Screen Design -->
+  <div class="slide bg-gradient-4" id="s10">
+    <div class="slide-header">
+      <span class="tag tag-blue">UI/UX</span>
+      <h2>주요 화면 구성</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid-3" style="gap:14px">
+      <div class="card" style="padding:18px">
+        <h4>🏠 메인 페이지</h4>
+        <p>GNB + 인기 축제 하이라이트, 랜딩</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>🗺️ 전국 축제 (지도)</h4>
+        <p>카카오맵 전체화면, 클러스터링, GPS</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>📋 축제 상세</h4>
+        <p>정보 + 이미지갤러리 + 후기/별점</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>📅 달력 뷰</h4>
+        <p>월별 캘린더 + 축제 리스트/카드</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>📜 지난 축제</h4>
+        <p>종료 축제 목록 + 만족도 표시</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>💬 커뮤니티</h4>
+        <p>Q&A / 꿀팁 / 먹거리 게시판</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>👤 마이페이지</h4>
+        <p>즐겨찾기, 내 게시글, 프로필 수정</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>⚙️ 관리자 대시보드</h4>
+        <p>데이터 관리, 신고, 공지/팝업</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <h4>📊 통계 대시보드</h4>
+        <p>지역별 분포, 사용자 활동 추이</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Team & Roles -->
+  <div class="slide bg-gradient-5" id="s11">
+    <div class="slide-header">
+      <span class="tag tag-green">TEAM</span>
+      <h2>역할 분담</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="border-top:3px solid #10b981">
+        <h4 style="margin-bottom:16px"><span class="gradient-text-green">🟢 프론트엔드</span></h4>
+        <ul class="feat-list">
+          <li>메인 페이지 (랜딩)</li>
+          <li>지도 연동 (카카오맵 SDK)</li>
+          <li>축제 목록 · 상세 · 검색/필터</li>
+          <li>달력 뷰 (FullCalendar)</li>
+          <li>지난 축제 · 리뷰/별점</li>
+          <li>커뮤니티 게시판 (Q&A/꿀팁/먹거리)</li>
+          <li>마이페이지 · 프로필 수정</li>
+          <li>로그인 / 회원가입 UI</li>
+          <li>관리자 대시보드 · 통계 UI</li>
+          <li>공지사항 · 반응형 레이아웃</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid #7c5cfc">
+        <h4 style="margin-bottom:16px"><span class="gradient-text">🔵 백엔드</span></h4>
+        <ul class="feat-list">
+          <li>회원 인증/인가 (JWT + Spring Security)</li>
+          <li>축제 CRUD API · 검색/필터 API</li>
+          <li>공공데이터 API 연동 (축제 수집)</li>
+          <li>리뷰/별점 API</li>
+          <li>커뮤니티 게시판/댓글 API</li>
+          <li>즐겨찾기 API</li>
+          <li>신고 접수/관리 API</li>
+          <li>관리자 통계 API</li>
+          <li>공지사항 · 설문 조사 API</li>
+          <li>DB 설계 (ERD · PostgreSQL)</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid #f97316">
+        <h4 style="margin-bottom:16px"><span class="gradient-text-warm">🟠 인프라 / DevOps</span></h4>
+        <ul class="feat-list">
+          <li>Docker Compose 컨테이너화</li>
+          <li>Nginx 리버스 프록시 설정</li>
+          <li>GitHub Actions CI/CD</li>
+          <li>DB Volume · 파일 Volume 관리</li>
+          <li>SSL 설정 · 배포 파이프라인</li>
+          <li>Swagger API 문서 관리</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Schedule -->
+  <div class="slide bg-gradient-6" id="s12">
+    <div class="glow glow-blue pulse" style="width:300px;height:300px;top:-80px;left:-80px"></div>
+    <div class="slide-header">
+      <span class="tag tag-orange">SCHEDULE</span>
+      <h2>일정 계획 (WBS)</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="timeline mb-40">
+      <div class="tl-item">
+        <div class="tl-week">1주차 (3/25~3/31)</div>
+        <div class="tl-title">📐 기획 & 설계</div>
+        <div class="tl-desc">기획서 확정, ERD, 와이어프레임,<br>API 설계서, API 키 발급</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">2주차 (4/1~4/7)</div>
+        <div class="tl-title">🔨 핵심 개발</div>
+        <div class="tl-desc">DB 구축, 핵심 API,<br>프론트 레이아웃 + 지도 연동</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">3주차 (4/8~4/14)</div>
+        <div class="tl-title">🧩 기능 완성</div>
+        <div class="tl-desc">커뮤니티, 마이페이지, 관리자,<br>검색/필터, 달력, API 연동 완료</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">4주차 (4/15~4/21)</div>
+        <div class="tl-title">🚀 배포 & 발표</div>
+        <div class="tl-desc">Docker, CI/CD, 통합 테스트,<br>4/20 리허설, <strong>4/21 발표</strong></div>
+      </div>
+    </div>
+    <div class="full-w">
+      <table class="tbl" style="font-size:13px">
+        <tr>
+          <th>단계</th>
+          <th>기간</th>
+          <th>주요 산출물</th>
+        </tr>
+        <tr>
+          <td>1단계: 기획 & 설계</td>
+          <td>3/25 ~ 3/31</td>
+          <td>기획서, 와이어프레임, ERD, API 설계서</td>
+        </tr>
+        <tr>
+          <td>2단계: 핵심 개발</td>
+          <td>4/1 ~ 4/7</td>
+          <td>DB 구축, 핵심 API, 프론트 레이아웃 + 지도 연동</td>
+        </tr>
+        <tr>
+          <td>3단계: 기능 완성</td>
+          <td>4/8 ~ 4/14</td>
+          <td>커뮤니티, 마이페이지, 관리자, 전체 API 연동</td>
+        </tr>
+        <tr>
+          <td>4단계: 배포 & 마무리</td>
+          <td>4/15 ~ 4/21</td>
+          <td>Docker, CI/CD, 통합 테스트, 발표</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Risks -->
+  <div class="slide bg-gradient-7" id="s13">
+    <div class="slide-header">
+      <span class="tag tag-orange">RISK</span>
+      <h2>리스크 및 대응 방안</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="full-w">
+      <table class="tbl">
+        <tr>
+          <th style="width:40px">#</th>
+          <th>리스크</th>
+          <th style="width:60px">영향</th>
+          <th>대응 방안</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>카카오맵 API 키 발급 지연</td>
+          <td><span style="color:#fca5a5">상</span></td>
+          <td>첫날 즉시 신청, 네이버맵 백업</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>공공데이터 API 응답 불안정</td>
+          <td><span style="color:#fdba74">중</span></td>
+          <td>더미 데이터(JSON/CSV) 미리 준비</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>지도 클러스터링 구현 난이도</td>
+          <td><span style="color:#fdba74">중</span></td>
+          <td>MarkerClusterer 활용, 1주차 PoC</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>다중 권한 처리 복잡도</td>
+          <td><span style="color:#fdba74">중</span></td>
+          <td>Spring Security Role 기반 인가</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>일정 지연 (기능 과다)</td>
+          <td><span style="color:#fca5a5">상</span></td>
+          <td>Must 집중, 3주차 말 기준 미완성 기능 제외</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>팀원 간 API 스펙 불일치</td>
+          <td><span style="color:#fdba74">중</span></td>
+          <td>Swagger 명세 공유, 1주차 합의</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Thank You -->
+  <div class="slide bg-gradient-1" id="s14">
+    <div class="glow glow-purple pulse" style="width:500px;height:500px;top:-150px;right:-150px"></div>
+    <div class="glow glow-blue pulse" style="width:400px;height:400px;bottom:-100px;left:-100px"></div>
+    <div class="text-center">
+      <div style="font-size:80px;margin-bottom:24px">🎪</div>
+      <h1 style="font-size:56px;margin-bottom:16px">
+        <span class="gradient-text">감사합니다</span>
+      </h1>
+      <p class="subtitle text-center" style="margin:0 auto 40px;font-size:22px">
+        전국 축제를 지도 위에서 발견하고,<br>후기로 나누는 통합 축제 정보 플랫폼
+      </p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <span class="tech-badge" style="font-size:15px">👥 팀 이음 (IEUM)</span>
+        <span class="tech-badge" style="font-size:15px">📅 2026.03 ~ 2026.04</span>
+        <span class="tech-badge" style="font-size:15px">🎤 Q&A 환영합니다!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="dots" id="dots"></div>
+  <div class="nav">
+    <button onclick="prevSlide()">◀</button>
+    <span id="counter">1 / 14</span>
+    <button onclick="nextSlide()">▶</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+    const dotsEl = document.getElementById('dots');
+    let current = 0;
+    const total = slides.length;
+
+    // Create dots
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => goTo(i);
+      dotsEl.appendChild(d);
+    }
+    const dots = dotsEl.querySelectorAll('.dot');
+
+    function goTo(n) {
+      const old = current;
+      slides[old].classList.remove('active');
+      if (n > old) slides[old].classList.add('prev');
+      current = n;
+      slides[current].classList.remove('prev');
+      slides[current].classList.add('active');
+      setTimeout(() => slides[old].classList.remove('prev'), 600);
+      counter.textContent = `${current + 1} / ${total}`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+    function nextSlide() { if (current < total - 1) goTo(current + 1) }
+    function prevSlide() { if (current > 0) goTo(current - 1) }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'Home') goTo(0);
+      if (e.key === 'End') goTo(total - 1);
+    });
+
+    // Touch support
+    let tx = 0;
+    document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].clientX - tx;
+      if (Math.abs(diff) > 50) { diff < 0 ? nextSlide() : prevSlide() }
+    });
+  </script>
+</body>
+
+</html>
