@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화면 설계도 - 전국축제 (진행중)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #fff;
+      color: #222;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 1200px;
+      margin: 20px auto;
+      border: 1.5px solid #333;
+      background: #fff;
+    }
+
+    /* ===== 상단 메타 정보 헤더 ===== */
+    .meta-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1.5px solid #333;
+    }
+
+    .meta-left {
+      display: grid;
+      grid-template-columns: auto 1fr auto 1fr;
+      border-right: 1.5px solid #333;
+    }
+
+    .meta-right {
+      display: grid;
+      grid-template-columns: auto 1fr auto 1fr;
+    }
+
+    .meta-label {
+      background: #f5f5f5;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 10px 14px;
+      border-right: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .meta-value {
+      font-size: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      border-right: 1px solid #ccc;
+    }
+
+    .meta-value:last-child {
+      border-right: none;
+    }
+
+    /* ===== 두번째 줄: Screen Path ===== */
+    .meta-row2 {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      border-bottom: 1.5px solid #333;
+    }
+
+    /* ===== 메인 콘텐츠 영역 ===== */
+    .main-content {
+      display: grid;
+      grid-template-columns: 65% 35%;
+      min-height: 800px;
+    }
+
+    /* 왼쪽: 스크린 캡처 영역 */
+    .screen-area {
+      border-right: 1.5px solid #333;
+      padding: 20px;
+      position: relative;
+      background: #fafafa;
+    }
+
+    .screen-image-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .screen-image-container img {
+      width: 100%;
+      display: block;
+      margin-top: -3.5%;
+    }
+
+    .screen-image-container.bottom-screen img {
+      margin-top: -5%;
+    }
+
+    /* 번호 마커 */
+    .marker {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #FF4D6A;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(255, 77, 106, 0.4);
+      z-index: 10;
+      cursor: default;
+    }
+
+    /* 오른쪽: 설명 영역 */
+    .description-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .desc-title {
+      background: #f5f5f5;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 16px;
+      border-bottom: 1.5px solid #333;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    /* Summary */
+    .summary-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .summary-section h4 {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #444;
+      font-style: italic;
+    }
+
+    .summary-section ul {
+      list-style: disc;
+      padding-left: 18px;
+    }
+
+    .summary-section li {
+      font-size: 12px;
+      line-height: 1.7;
+      color: #555;
+    }
+
+    /* 번호별 설명 테이블 */
+    .desc-table {
+      width: 100%;
+      border-collapse: collapse;
+      flex: 1;
+    }
+
+    .desc-table tr {
+      border-bottom: 1px solid #ddd;
+    }
+
+    .desc-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .desc-table td {
+      padding: 10px 12px;
+      vertical-align: top;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .desc-table .num {
+      width: 36px;
+      text-align: center;
+      font-weight: 700;
+      color: #FF4D6A;
+      font-size: 13px;
+      vertical-align: middle;
+      border-right: 1px solid #eee;
+    }
+
+    .desc-table .desc-text {
+      color: #333;
+    }
+
+    /* Check Point 섹션 */
+    .checkpoint {
+      border-top: 1.5px solid #333;
+      padding: 12px 16px;
+    }
+
+    .checkpoint h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a56db;
+      margin-bottom: 6px;
+    }
+
+    .checkpoint p {
+      font-size: 12px;
+      line-height: 1.7;
+      color: #555;
+    }
+
+    /* 구분선 */
+    .page-divider {
+      border: none;
+      border-top: 1.5px dashed #aaa;
+      margin: 0;
+    }
+
+    /* 페이지 2 */
+    .page2-label {
+      text-align: right;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #888;
+      border-bottom: 1.5px solid #333;
+      background: #f9f9f9;
+    }
+
+    @media print {
+      .page {
+        width: 100%;
+        margin: 0;
+        border: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== 전국축제 (진행중) - 콘텐츠 영역 ===================== -->
+<div class="page">
+  <!-- 메타 정보 헤더 Row 1 -->
+  <div class="meta-header">
+    <div class="meta-left">
+      <div class="meta-label">Page Title.</div>
+      <div class="meta-value">전국축제 (진행중)</div>
+      <div class="meta-label">Screen ID</div>
+      <div class="meta-value">UI-F-001</div>
+    </div>
+    <div class="meta-right">
+      <div class="meta-label">Author</div>
+      <div class="meta-value">Team 2</div>
+      <div class="meta-label">Date</div>
+      <div class="meta-value">2026.03.27</div>
+    </div>
+  </div>
+
+  <!-- 메타 정보 Row 2 -->
+  <div class="meta-row2">
+    <div class="meta-label">Screen Path</div>
+    <div class="meta-value">지역축제 &gt; 전국축제 &gt; 진행중</div>
+  </div>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="main-content">
+    <!-- 왼쪽: 스크린 캡처 + 마커 -->
+    <div class="screen-area">
+      <div class="screen-image-container">
+        <img src="images/festival_top.png" alt="전국축제 진행중 - 콘텐츠 화면">
+
+        <!-- ① 탭 네비게이션 -->
+        <div class="marker" style="top: 14%; left: 30%;">1</div>
+
+        <!-- ② 진행 상태 필터 -->
+        <div class="marker" style="top: 22%; left: 22%;">2</div>
+
+        <!-- ③ 정렬 드롭다운 -->
+        <div class="marker" style="top: 22%; right: 7%;">3</div>
+
+        <!-- ④ 검색바 + 필터 -->
+        <div class="marker" style="top: 31%; left: 50%;">4</div>
+
+        <!-- ⑤ 축제 카운트 -->
+        <div class="marker" style="top: 36%; left: 15%;">5</div>
+
+        <!-- ⑥ 축제 카드 -->
+        <div class="marker" style="top: 55%; left: 25%;">6</div>
+      </div>
+    </div>
+
+    <!-- 오른쪽: 설명 -->
+    <div class="description-area">
+      <div class="desc-title">Description</div>
+
+      <div class="summary-section">
+        <h4>Summary.</h4>
+        <ul>
+          <li>전국의 진행중인 축제를 카드형 리스트로 조회하는 콘텐츠 영역</li>
+          <li>검색, 필터, 정렬 기능을 통해 원하는 축제를 빠르게 탐색 가능</li>
+          <li>공공 API 데이터 + 자체 등록 축제 데이터 통합 제공</li>
+        </ul>
+      </div>
+
+      <table class="desc-table">
+        <tr>
+          <td class="num">1</td>
+          <td class="desc-text">
+            <strong>탭 네비게이션</strong><br>
+            전국축제 | 지난축제 | 달력 | 커뮤니티 | 공지<br>
+            현재 선택된 탭에 하단 파란색 밑줄로 활성 상태 표시
+          </td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="desc-text">
+            <strong>진행 상태 필터 버튼</strong><br>
+            · <strong>진행중</strong> (기본 선택, 파란색 활성화) - 현재 진행중인 축제만 표시<br>
+            · <strong>진행전</strong> - 예정된 축제 목록 표시<br>
+            · <strong>지도</strong> - 지도 뷰로 전환하여 축제 위치 확인
+          </td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="desc-text">
+            <strong>정렬 드롭다운</strong><br>
+            "최신순" 기본 선택<br>
+            클릭 시 정렬 옵션 표시 (최신순, 인기순 등)
+          </td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="desc-text">
+            <strong>검색바 + 필터 버튼</strong><br>
+            축제명, 지역, 키워드로 축제 검색 가능<br>
+            우측 "필터" 버튼 클릭 시 상세 필터 (지역별, 카테고리별) 모달 표시
+          </td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="desc-text">
+            <strong>축제 카운트 표시</strong><br>
+            현재 필터 조건에 맞는 축제 총 갯수를 표시<br>
+            예: "총 <strong>8</strong>개의 축제"
+          </td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="desc-text">
+            <strong>축제 카드 리스트</strong><br>
+            4열 그리드 레이아웃으로 축제 카드 배치 (총 8개, 2행)<br>
+            각 카드 구성:<br>
+            · 축제 대표 이미지 (상단)<br>
+            · 진행 상태 태그 ("진행중" 초록색 배지)<br>
+            · 축제명 (굵은 텍스트)<br>
+            · 축제 한줄 설명<br>
+            · 위치 (📍 아이콘 + 지역명)<br>
+            · 기간 (📅 아이콘 + 날짜 범위)<br>
+            카드 클릭 시 해당 축제 상세 페이지로 이동
+          </td>
+        </tr>
+      </table>
+
+      <div class="checkpoint">
+        <h4>Check Point</h4>
+        <p>
+          · 카드 클릭 시 축제 상세 페이지 (/festival/{id})로 이동<br>
+          · 검색/필터 결과에 따라 카운트와 카드 목록이 동적으로 갱신<br>
+          · 지도 버튼 클릭 시 지도 뷰로 전환<br>
+          · 축제 데이터가 많을 경우 페이지네이션 적용
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
