@@ -5,7 +5,7 @@
 > **작성자**: 서범  
 > **버전**: v1.0  
 > **데이터 출처**: [한국관광공사_국문 관광정보 서비스_GW](https://www.data.go.kr/data/15101578/openapi.do)  
-> **Base URL**: `https://apis.data.go.kr/B551011/KorService1`
+> **Base URL**: `https://apis.data.go.kr/B551011/KorService2`
 
 ---
 
@@ -115,7 +115,7 @@
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /areaCode1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/areaCode1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/areaCode1` |
 | **설명** | 시/도 및 시군구 지역코드 목록을 조회 |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -180,7 +180,7 @@ GET /areaCode1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json&areaCode=
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /detailPetTour1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/detailPetTour1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/detailPetTour1` |
 | **설명** | 특정 콘텐츠의 반려동물 동반 여행 관련 정보 조회 |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -247,7 +247,7 @@ GET /detailPetTour1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json&cont
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /categoryCode1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/categoryCode1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/categoryCode1` |
 | **설명** | 서비스 분류(대/중/소분류) 코드 목록 조회 |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -311,7 +311,7 @@ GET /categoryCode1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json&conte
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /areaBasedList1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/areaBasedList1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/areaBasedList1` |
 | **설명** | 지역 코드 기반으로 관광정보 목록 조회 (축제 목록 조회의 핵심 API) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -409,7 +409,7 @@ GET /areaBasedList1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /locationBasedList1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/locationBasedList1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/locationBasedList1` |
 | **설명** | GPS 좌표 기반으로 반경 내 관광정보 조회 (지도 화면 핵심 API) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -475,7 +475,7 @@ GET /locationBasedList1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /searchKeyword1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/searchKeyword1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/searchKeyword1` |
 | **설명** | 키워드로 관광정보 검색 (검색 기능 핵심 API) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -510,7 +510,7 @@ GET /searchKeyword1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /detailCommon1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/detailCommon1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/detailCommon1` |
 | **설명** | 특정 콘텐츠의 공통 상세 정보 조회 (축제 상세 화면 핵심 API) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -606,7 +606,7 @@ GET /detailCommon1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /detailIntro1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/detailIntro1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/detailIntro1` |
 | **설명** | 콘텐츠 타입별 소개 정보 조회 (축제: 행사 시간, 장소, 이용 요금 등) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -686,7 +686,7 @@ GET /detailIntro1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /detailInfo1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/detailInfo1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/detailInfo1` |
 | **설명** | 콘텐츠의 추가 반복 정보 조회 (수용인원, 주차시설 등) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -754,7 +754,7 @@ GET /detailInfo1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /detailImage1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/detailImage1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/detailImage1` |
 | **설명** | 특정 콘텐츠의 이미지 목록 조회 |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -842,7 +842,7 @@ GET /categoryCode1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json&cat1=
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /areaBasedSyncList1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/areaBasedSyncList1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/areaBasedSyncList1` |
 | **설명** | 최종 수정일 기준으로 변경된 관광정보 동기화 목록 조회 (배치 동기화 핵심 API) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**
@@ -910,7 +910,7 @@ GET /areaBasedSyncList1?serviceKey={KEY}&MobileOS=ETC&MobileApp=IEUM&_type=json
 | 항목 | 내용 |
 |------|------|
 | **엔드포인트** | `GET /areaCode1` |
-| **전체 URL** | `https://apis.data.go.kr/B551011/KorService1/areaCode1` |
+| **전체 URL** | `https://apis.data.go.kr/B551011/KorService2/areaCode1` |
 | **설명** | 법정동 단위의 상세 지역코드 조회 (신규 기능) |
 
 **요청 파라미터 (공통 파라미터 + 아래):**

@@ -1,0 +1,101 @@
+======================================================================
+  Korean Tourism API (KorService2) - Full Test
+  Base URL: https://apis.data.go.kr/B551011/KorService2
+======================================================================
+
+======================================================================
+[TEST] 1. 지역코드조회 (areaCode2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=17
+   item[0]: {"rnum": 1, "code": "1", "name": "서울"}
+   item[1]: {"rnum": 2, "code": "2", "name": "인천"}
+   ... +15 more items
+
+======================================================================
+[TEST] 2. 서비스분류코드조회 (categoryCode2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=7
+   item[0]: {"code": "A01", "name": "자연", "rnum": 1}
+   item[1]: {"code": "A02", "name": "인문(문화/예술/역사)", "rnum": 2}
+   ... +5 more items
+
+======================================================================
+[TEST] 3. 지역기반관광정보조회 (areaBasedList2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=197
+   item[0]: {"addr1": "서울특별시 종로구 창경궁로 185 (와룡동)", "addr2": "창경궁, 서울 종로구 율곡로 99 창덕궁", "areacode": "1", "cat1": "A02", "cat2": "A0207", "cat3": "A02070200", "contentid": "3572025", "contenttypeid": "15", "createdtime": "20251121171705", "firstimage": "http://tong.visitkorea.or.kr/cms/resource/22/3572022_image2_1.jpg", "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/22/3572022_image3_1.jpg", "cpyrhtDiv...
+   item[1]: {"addr1": "서울특별시 서초구 방배중앙로 193 (방배동)", "addr2": "방배카페골목 상권 일대", "areacode": "1", "cat1": "A02", "cat2": "A0207", "cat3": "A02070200", "contentid": "3563444", "contenttypeid": "15", "createdtime": "20251107172839", "firstimage": "http://tong.visitkorea.or.kr/cms/resource/52/3564652_image2_1.png", "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/52/3564652_image3_1.png", "cpyrhtDivCd": "Typ...
+   ... +1 more items
+
+======================================================================
+[TEST] 4. 키워드검색조회 (searchKeyword2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=0
+
+======================================================================
+[TEST] 5. 위치기반관광정보조회 (locationBasedList2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=32
+   item[0]: {"addr1": "서울특별시 영등포구 여의공원로 68 (여의도동)", "addr2": "", "zipcode": "07243", "areacode": "1", "cat1": "A02", "cat2": "A0208", "cat3": "A02081300", "contentid": "2497537", "contenttypeid": "15", "createdtime": "20170623221215", "dist": "573.59146381979", "firstimage": "http://tong.visitkorea.or.kr/cms/resource/80/3494980_image2_1.png", "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/80/349498...
+   item[1]: {"addr1": "서울특별시 영등포구 여의공원로 13 (여의도동)", "addr2": "", "zipcode": "07235", "areacode": "1", "cat1": "A02", "cat2": "A0208", "cat3": "A02081300", "contentid": "3541205", "contenttypeid": "15", "createdtime": "20250919132351", "dist": "664.3724042958785", "firstimage": "http://tong.visitkorea.or.kr/cms/resource/03/3541203_image2_1.png", "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/03/3541...
+   ... +1 more items
+
+======================================================================
+[TEST] 6. 동기화목록조회 (areaBasedSyncList2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=1059
+   item[0]: {"addr1": "서울특별시 송파구 양재대로 932 (가락동)", "addr2": "가락몰 3층 하늘공원", "areacode": "1", "cat1": "A02", "cat2": "A0207", "cat3": "A02070200", "contentid": "3113671", "contenttypeid": "15", "createdtime": "20240415100726", "firstimage": "http://tong.visitkorea.or.kr/cms/resource/91/3484791_image2_1.jpg", "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/91/3484791_image3_1.jpg", "cpyrhtDivCd": "Type3...
+   item[1]: {"addr1": "서울특별시 송파구 양재대로 932 (가락동)", "addr2": "(가락동 600) 가락몰3층 하늘공원", "areacode": "1", "cat1": "A02", "cat2": "A0207", "cat3": "A02070200", "contentid": "3379778", "contenttypeid": "15", "createdtime": "20241004095015", "firstimage": "http://tong.visitkorea.or.kr/cms/resource/73/3553073_image2_1.png", "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/73/3553073_image3_1.png", "cpyrhtDivCd...
+   ... +1 more items
+
+======================================================================
+[TEST] 7. 분류체계코드조회 (categoryCode2 cat1=A02)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=8
+   item[0]: {"code": "A0201", "name": "역사관광지", "rnum": 1}
+   item[1]: {"code": "A0202", "name": "휴양관광지", "rnum": 2}
+   ... +6 more items
+
+**********************************************************************
+  Detail APIs - contentId=3572025 (동궐동락)
+**********************************************************************
+
+======================================================================
+[TEST] 8. 공통정보조회 (detailCommon2)
+======================================================================
+>> [FAIL] resultCode=? | resultMsg=? | totalCount=?
+
+======================================================================
+[TEST] 9. 소개정보조회 (detailIntro2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=1
+   item[0]: {"contentid": "3572025", "contenttypeid": "15", "sponsor1": "국가유산청 궁능유적본부", "sponsor1tel": "1522-2295", "sponsor2": "국가유산진흥원", "sponsor2tel": "", "eventenddate": "20251116", "playtime": "18:00~21:00", "eventplace": "창경궁 및 창덕궁(후원)", "eventhomepage": "", "agelimit": "", "bookingplace": "", "placeinfo": "", "subevent": "", "program": "", "eventstartdate": "20251111", "usetimefestival": "유료 (30,000원)"...
+
+======================================================================
+[TEST] 10. 반복정보조회 (detailInfo2)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=2
+   item[0]: {"contentid": "3572025", "contenttypeid": "15", "serialnum": "0", "infoname": "행사소개", "infotext": "2025년 <동궐동락>은 조선시대 '동궐'이라 불렸던 창경궁과 창덕궁에서 펼쳐지는 궁궐 야간 탐방 프로그램이다. 본 프로그램에서는 도화서 화원과 함께 하는 몰입형 궁궐 투어(60분)와 동궐 후원 자유관람(40분)을 즐길 수 있다. 1일 4회(18:00~ / 18:20~ / 18:40~ / 19:00~), 회당 50명이 참여할 수 있으며, 회당 소요시간은 110분 내외이다.", "fldgubun": "2"}
+   item[1]: {"contentid": "3572025", "contenttypeid": "15", "serialnum": "1", "infoname": "행사내용", "infotext": "- 도화서 화원과 이야기 투어<br>\n도화서 화원과 함께 창경궁의 주요 공간을 거닐며 동궐의 숨겨진 이야기를 들어보세요!<br><br>\n\n- 4곳에서 이뤄지는 소규모 시간여행 극<br>\n창경궁 명정전, 환경전, 통명전, 대춘당지 4곳에서 화원의 붓끝을 따라 시작되고 멈추는 극을 통해 다양한 시대 인물들의 동고동락을 엿보는 시간여행!<br><br>\n\n- 단 엿새 간, 하나되는 동궐<br>\n평소 비개방이었던 창덕궁과 창경궁 사이 궐문 ‘영춘문’을 단 엿새 동안만 활짝 엽니다. 하나되어 이어진 동궐 후원을 거니는 특별한 밤 산...
+
+======================================================================
+[TEST] 11. 이미지정보조회 (detailImage2)
+======================================================================
+>> [FAIL] resultCode=? | resultMsg=? | totalCount=?
+
+======================================================================
+[TEST] 12. 반려동물동반여행정보 (detailPetTour2)
+======================================================================
+>> [FAIL] resultCode=? | resultMsg=? | totalCount=?
+
+======================================================================
+[TEST] 13. 법정동코드조회 (areaCode2 areaCode=1)
+======================================================================
+>> [PASS] resultCode=0000 | resultMsg=OK | totalCount=25
+   item[0]: {"rnum": 1, "code": "1", "name": "강남구"}
+   item[1]: {"rnum": 2, "code": "2", "name": "강동구"}
+   ... +23 more items
+
+======================================================================
+  All 13 API tests completed!
+======================================================================
