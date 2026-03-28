@@ -1,0 +1,42 @@
+﻿단계,대분류,중분류,세부 기능,CRUD,필요 API,구현 방식 상세,진행 상태
+1단계: 기획/설계,기획,기획서 확정,기획서 최종 리뷰 및 확정,-,-,-,완료
+1단계: 기획/설계,기획,역할 분담 확정,팀원별 담당 기능 배정,-,-,-,완료
+1단계: 기획/설계,설계,ERD 설계,"테이블 설계 (User/Festival/Review/Post/Comment/Notice/Report/Favorite)",-,-,"PostgreSQL DDL 작성, 관계 정의",완료
+1단계: 기획/설계,설계,API 설계서 작성,전체 API 엔드포인트 목록 + 요청/응답 명세,-,-,"Swagger(OpenAPI 3.0) 기반, 컨트롤러/서비스 목록 도출",완료
+1단계: 기획/설계,설계,배치 설계서,공공데이터 API 호출 스케줄러 설계,-,-,"Java Scheduler 활용, 배치 주기/시간 결정",완료
+1단계: 기획/설계,설계,와이어프레임/화면 설계,Figma 기반 화면 구성 확정,-,-,기존 기획서로 대체 가능,완료
+1단계: 기획/설계,설계,WBS 세분화,개발 단계 세부 일정 + RnR 배정,-,-,"구글 스프레드시트로 공동 작업, 엑셀형 WBS",완료
+1단계: 기획/설계,환경세팅,공공데이터 API 키 신청,-,-,-,data.go.kr에서 축제/행사 API 활용 신청,완료
+1단계: 기획/설계,환경세팅,프로젝트 초기 세팅(프론트),Next.js 16 + TypeScript + CSS Modules + Zustand 세팅,-,-,-,예정
+1단계: 기획/설계,환경세팅,프로젝트 초기 세팅(백엔드),Spring Boot 4.0.1 + Java 21 + PostgreSQL + Swagger 세팅,-,-,-,예정
+1단계: 기획/설계,환경세팅,GitHub 리포 + 브랜치 전략,main → develop → feature 브랜치 생성,-,-,-,예정
+1단계: 기획/설계,문서화,Swagger API 문서 정리,전체 API 명세 최종 정리,-,-,"@Operation 어노테이션, 요청/응답 예시 추가",예정
+1단계: 기획/설계,외부API 테스트,공공데이터 API PoC,"축제 데이터 호출, 응답 구조 확인, 파싱 테스트",-,-,"RestTemplate/WebClient로 호출, JSON 파싱, 더미데이터 백업 준비",완료
+1단계: 기획/설계,외부API 테스트,Firebase FCM PoC,브라우저 알림 권한 및 테스트 메시지 수신 확인,-,-,Firebase SDK 설정 및 Service Worker 등록 테스트,예정
+2단계: 핵심개발,축제 데이터,공공데이터 수집 배치,축제 데이터 주기적 수집 + DB 저장,Create,내부 배치 (Scheduler),"@Scheduled 어노테이션, 1일 1회 새벽 실행, data.go.kr API 호출 → Festival 테이블 UPSERT",예정
+2단계: 핵심개발,축제 데이터,축제 목록 조회 API,전체/필터별 축제 목록,Read,"GET /api/festivals?region=&status=&category=&keyword=&page=&size=","QueryParam 기반 필터링, 페이지네이션(Pageable), status별 분리(UPCOMING/ONGOING/ENDED)",예정
+2단계: 핵심개발,축제 데이터,축제 상세 조회 API,축제 개별 상세 정보,Read,GET /api/festivals/{festivalId},"Festival 엔티티 + 리뷰 평균 별점 + 리뷰 수 JOIN 조회, 조회수 증가 처리",예정
+2단계: 핵심개발,축제 데이터,축제 검색/필터 API,"지역별, 날짜별, 카테고리별 필터 + 키워드 검색",Read,GET /api/festivals/search?keyword=&startDate=&endDate=,"JPA Specification 또는 QueryDSL 동적 쿼리, LIKE 검색",예정
+2단계: 핵심개발,축제 데이터,축제 목록/상세 페이지 UI,축제 카드 목록 + 상세 정보 페이지,Read,-,"SSR로 SEO 최적화, 이미지 갤러리, 지도 미니맵",예정
+2단계: 핵심개발,회원/인증,FCM 토큰 관리 API,기기별 FCM 토큰 저장 및 갱신,Create/Update,POST /api/auth/fcm-token,"RequestBody: {token}",예정
+3단계: 기능완성,지난축제,지난 축제 목록 페이지 UI,"종료 축제 아카이브 + 별점 평균",Read,-,"status=ENDED 필터, 평균 별점 표시, 후기 목록",예정
+3단계: 기능완성,달력,달력 뷰 페이지 UI,월별 캘린더 + 축제 리스트/카드 표시,Read,-,"FullCalendar 라이브러리 연동, 데이터 개수 기반 유연한 뷰 전환",예정
+3단계: 기능완성,달력,달력 축제 조회 API,월별 축제 데이터 조회,Read,GET /api/festivals/calendar?year=&month=,해당 월에 걸치는 축제 목록 조회 (start_date/end_date 범위 쿼리),예정
+3단계: 기능완성,마이페이지,알림 센터 & 설정,내 알림 목록 조회 및 푸시 알림 ON/OFF 설정,Read/Update,GET /api/users/me/notifications,알림 읽음 처리 및 알림 수신 동의 여부 토글 버튼 UI 구현,예정
+3단계: 기능완성,공지사항,공지 작성 API,관리자 공지 등록,Create,POST /api/notices,"RequestBody: {title, content, isPopup}, ADMIN 권한만",예정
+3단계: 기능완성,공지사항,공지 목록/상세 API,공지 리스트 및 공지 상세 내용 반환,Read,"GET /api/notices, GET /api/notices/{id}","최신순 정렬, 페이지네이션",예정
+3단계: 기능완성,공지사항,공지 수정/삭제 API,관리자 공지 수정 및 삭제,Update/Delete,PUT/DELETE /api/notices/{id},ADMIN 권한 검증,예정
+3단계: 기능완성,공지사항,공지사항 UI,"공지 목록, 상세 페이지, 팝업 공지",Read,-,"공지 목록/상세 페이지, isPopup=true시 메인 화면 팝업 모달 띄우기",예정
+3단계: 기능완성,공지사항,공지/시스템 알림 발송,중요 공지 등록 시 푸시 발송 및 축제 D-Day 알림,Create,(내부 로직 연동),"FCM Admin SDK 활용, DB에 저장된 토큰 기반 발송",예정
+3단계: 기능완성,관리자,관리자 대시보드 UI,축제 데이터 관리 + 운영관리 통합,-,-,"관리자 전용 레이아웃, 사이드바 내비게이션",예정
+3단계: 기능완성,관리자,공공API 수동 갱신 기능,관리자가 버튼 클릭으로 축제 데이터 갱신,Update,POST /api/admin/festivals/sync,"ADMIN 권한, data.go.kr API 호출 → DB UPSERT, 결과 요약 반환",예정
+3단계: 기능완성,관리자,통계 데이터 API,"지역별 축제 통계, 사용자 활동 통계",Read,GET /api/admin/stats/festivals + GET /api/admin/stats/users,"GROUP BY region, 기간별 활동 집계 쿼리",예정
+3단계: 기능완성,관리자,자체 축제 관리,자체 기획 축제 수동 등록/수정/삭제 API,C/U/D,POST/PUT/DELETE /api/admin/festivals,"자체 기획 축제 수동 등록/수정 기능, 지도 좌표(위도/경도) 필수",예정
+3단계: 기능완성,관리자,자체 축제 등록 UI,자체 축제 수동 등록 폼 UI 화면,C/U/D,-,공공데이터 갱신과 분리된 자체 관리자 Page 폼 구성,예정
+4단계: 배포/마무리,배포,Docker Compose 구성,프론트(Next.js) + 백엔드(Spring) + DB(PostgreSQL) + Nginx,-,-,"docker-compose.yml 작성, 볼륨 마운트(이미지 파일), 환경변수 분리",예정
+4단계: 배포/마무리,배포,CI/CD 파이프라인,GitHub Actions 자동 빌드/배포,-,-,"push → build → test → deploy, develop/main 브랜치 트리거",예정
+4단계: 배포/마무리,배포,Nginx 리버스 프록시 설정,프론트 앞단 리버스 프록시 + SSL,-,-,"nginx.conf 작성, 프론트(3000) → 80/443, API 프록시(/api → 8080)",예정
+4단계: 배포/마무리,테스트,통합 테스트,전체 흐름 테스트 (회원가입→로그인→조회→리뷰→커뮤니티),-,-,"시나리오 기반 수동 테스트, 주요 흐름 5개 이상",예정
+4단계: 배포/마무리,테스트,크로스 브라우저/반응형 테스트,"Chrome/Safari/Firefox, 모바일/태블릿/데스크톱",-,-,"실기기 + 개발자도구 반응형 모드, CSS 깨짐 확인",예정
+4단계: 배포/마무리,테스트,버그 수정,테스트 중 발견된 버그 수정,-,-,-,예정
+4단계: 배포/마무리,발표준비,발표 PPT 제작,프로젝트 소개 + 기술 아키텍처 + 시연 시나리오,-,-,-,예정
